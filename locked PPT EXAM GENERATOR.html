@@ -1,0 +1,2463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PPT Exam Generator - Secured</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1d428a; /* Deep blue for EPL theme */
+      --primary-light: #2a5ab5;
+      --secondary: #d71920; /* Red accent for EPL theme */
+      --accent: #f0f0f0;
+      --dark: #0a1128;
+      --light: #ffffff;
+      --gray-100: #f9fafb;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.2);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --border-radius: 10px;
+      --border-radius-sm: 6px;
+      --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    
+    /* Reset and base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      margin: 0;
+      font-family: var(--font-primary);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf9 100%);
+      color: var(--gray-700);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    a:hover, a:focus-visible {
+      color: var(--primary-light);
+      outline: none;
+    }
+    
+    /* Login screen */
+    #loginScreen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    
+    .login-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-xl);
+      width: 100%;
+      max-width: 500px;
+      padding: 2.5rem;
+      text-align: center;
+    }
+    
+    .login-card h1 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+    
+    .login-card p {
+      margin-bottom: 2rem;
+      color: var(--gray-600);
+    }
+    
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .form-group {
+      text-align: left;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      font-size: 1rem;
+      border: 2px solid var(--gray-300);
+      border-radius: var(--border-radius-sm);
+      background: var(--light);
+      color: var(--gray-700);
+      transition: var(--transition);
+      font-family: var(--font-primary);
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(29, 66, 138, 0.2);
+    }
+    
+    .login-btn {
+      padding: 0.9rem 2rem;
+      font-size: 1.12rem;
+      border-radius: 50px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: var(--light);
+      box-shadow: 0 6px 18px rgba(29, 66, 138, 0.4);
+      letter-spacing: 0.02em;
+      margin-top: 1rem;
+    }
+    
+    .login-btn:hover {
+      box-shadow: 0 9px 24px rgba(29, 66, 138, 0.5);
+      transform: translateY(-3px);
+    }
+    
+    .login-status {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: var(--border-radius-sm);
+      font-weight: 500;
+      display: none;
+    }
+    
+    .login-status.success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      display: block;
+    }
+    
+    .login-status.error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      display: block;
+    }
+    
+    .license-info {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: rgba(29, 66, 138, 0.05);
+      border-radius: var(--border-radius-sm);
+      font-size: 0.9rem;
+    }
+    
+    /* App container */
+    #appContainer {
+      display: none;
+    }
+    
+    header {
+      position: sticky;
+      top: 0;
+      background: var(--light);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 1rem 2rem;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      flex-wrap: wrap;
+      row-gap: 0.4rem;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+    }
+    
+    header .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--light);
+      user-select: none;
+      line-height: 1.1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    header .logo::before {
+      content: "";
+      display: block;
+      width: 40px;
+      height: 40px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>');
+      background-size: contain;
+    }
+    
+    header .subtext {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-top: 0.15rem;
+      color: rgba(255, 255, 255, 0.8);
+      user-select: text;
+    }
+    
+    header .subtext a {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+    }
+    
+    header .subtext a:hover {
+      color: white;
+      text-decoration: underline;
+    }
+    
+    .update-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      background: rgba(255,255,255,0.15);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      margin-left: auto;
+    }
+    
+    .update-info .update-btn {
+      background: var(--secondary);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    
+    .update-info .update-btn:hover {
+      background: #b3151c;
+      transform: translateY(-2px);
+    }
+    
+    .update-info .update-btn.updating {
+      background: var(--warning);
+      pointer-events: none;
+    }
+    
+    main {
+      flex-grow: 1;
+      max-width: 1400px;
+      width: 90%;
+      margin: 2rem auto 3rem;
+      padding: 0 1rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      user-select: none;
+      line-height: 1.1;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      display: inline-block;
+    }
+    
+    h1::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+      transform: scaleX(0.8);
+      transform-origin: left;
+      animation: underline 1s ease-out forwards;
+    }
+    
+    @keyframes underline {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(0.8); }
+    }
+    
+    h2 {
+      font-weight: 700;
+      color: var(--dark);
+      margin-top: 2.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      user-select: none;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+    
+    h2::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
+    
+    h3 {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+      user-select: none;
+    }
+    
+    label {
+      cursor: pointer;
+      user-select: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--gray-700);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: var(--transition);
+      position: relative;
+    }
+    
+    label:hover, label:focus-within {
+      color: var(--primary);
+    }
+    
+    .card {
+      background: var(--light);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 2.5rem;
+      user-select: text;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: var(--primary);
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+    
+    .flex-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem 2rem;
+      justify-content: flex-start;
+    }
+    
+    .flex-col {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .selector-section {
+      flex: 1 1 300px;
+      max-width: 420px;
+      border-radius: var(--border-radius);
+      background: var(--light);
+      box-shadow: var(--shadow-sm);
+      padding: 1.5rem;
+      max-height: 280px;
+      overflow-y: auto;
+      user-select: none;
+      transition: var(--transition);
+      border: 1px solid var(--gray-200);
+    }
+    
+    .selector-section:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+    
+    .selector-section h3 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      user-select: none;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--gray-200);
+    }
+    
+    fieldset {
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .checkbox-group label {
+      gap: 0.5rem;
+      margin-bottom: 0.8rem;
+      padding: 0.5rem;
+      border-radius: var(--border-radius-sm);
+      transition: var(--transition);
+    }
+    
+    .checkbox-group label:hover {
+      background: rgba(29, 66, 138, 0.05);
+      transform: translateX(5px);
+    }
+    
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: var(--primary);
+      border-radius: 4px;
+      transition: var(--transition);
+      flex-shrink: 0;
+      /* Fix for visibility */
+      opacity: 1 !important;
+      position: static !important;
+    }
+    
+    input[type="checkbox"]:hover {
+      transform: scale(1.1);
+    }
+    
+    input[type="checkbox"]:focus-visible {
+      outline-offset: 3px;
+      outline-color: var(--primary);
+      outline-style: solid;
+      outline-width: 2px;
+    }
+    
+    input[type="number"], select, input[type="text"] {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      font-size: 1rem;
+      border: 2px solid var(--gray-300);
+      border-radius: var(--border-radius-sm);
+      background: var(--light);
+      color: var(--gray-700);
+      transition: var(--transition);
+      user-select: text;
+      font-weight: 500;
+      font-family: var(--font-primary);
+    }
+    
+    input[type="number"]:focus, select:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(29, 66, 138, 0.2);
+    }
+    
+    button {
+      padding: 0.9rem 2rem;
+      font-size: 1.12rem;
+      border-radius: 50px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+      margin-right: 1rem;
+      flex-shrink: 0;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: var(--light);
+      box-shadow: 0 6px 18px rgba(29, 66, 138, 0.4);
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    button::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 20px;
+      height: 200%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(25deg);
+      transition: all 0.8s;
+    }
+    
+    button:hover {
+      box-shadow: 0 9px 24px rgba(29, 66, 138, 0.5);
+      transform: translateY(-3px);
+    }
+    
+    button:hover::after {
+      left: 120%;
+    }
+    
+    button:active {
+      transform: translateY(1px);
+      box-shadow: 0 3px 10px rgba(29, 66, 138, 0.4);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      box-shadow: none;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(29, 66, 138, 0.1);
+      color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(29, 66, 138, 0.15);
+    }
+    
+    .btn-all {
+      background: linear-gradient(90deg, var(--success) 0%, #0da271 100%);
+      color: white;
+    }
+    
+    .btn-all:hover {
+      background: linear-gradient(90deg, #0da271 0%, #0b925f 100%);
+    }
+    
+    #buttonsRow {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+    }
+    
+    /* Preview panel */
+    #previewPanel {
+      background: var(--light);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      max-height: 480px;
+      overflow-y: auto;
+      user-select: text;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--gray-900);
+      word-break: break-word;
+      hyphens: auto;
+      border: 1px solid var(--gray-200);
+      transition: var(--transition);
+      position: relative;
+    }
+    
+    #previewPanel:hover {
+      box-shadow: var(--shadow-md);
+    }
+    
+    #previewPanel h2 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      font-size: 1.8rem;
+    }
+    
+    .question-block {
+      margin-bottom: 1.8rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px dashed var(--gray-200);
+      transition: var(--transition);
+    }
+    
+    .question-block:hover {
+      background: rgba(245, 247, 250, 0.5);
+      border-radius: var(--border-radius-sm);
+      padding: 1rem;
+    }
+    
+    .question-header {
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      user-select: text;
+    }
+    
+    .question-meta {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.03em;
+      user-select: text;
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .question-text {
+      margin-bottom: 0.8rem;
+      font-weight: 500;
+      user-select: text;
+    }
+    
+    .options-list {
+      margin-left: 1.25rem;
+      list-style-type: upper-alpha;
+      color: var(--gray-700);
+      user-select: text;
+    }
+    
+    .options-list li {
+      margin-bottom: 0.5rem;
+      padding-left: 0.5rem;
+      transition: var(--transition);
+    }
+    
+    .options-list li:hover {
+      color: var(--primary);
+      transform: translateX(5px);
+    }
+    
+    /* Notifications */
+    #notification {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--primary);
+      color: var(--light);
+      padding: 1.2rem 2.25rem;
+      border-radius: 50px;
+      box-shadow: var(--shadow-lg);
+      font-size: 1rem;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(3rem);
+      transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 9999;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    
+    #notification::before {
+      content: "✓";
+      font-size: 1.2rem;
+    }
+    
+    #notification.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    
+    #notification.warning {
+      background: var(--warning);
+    }
+    
+    #notification.warning::before {
+      content: "⚠️";
+    }
+    
+    #notification.info {
+      background: var(--primary-light);
+    }
+    
+    #notification.info::before {
+      content: "ℹ️";
+    }
+    
+    /* Scrollbars for containers */
+    .selector-section::-webkit-scrollbar,
+    #previewPanel::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .selector-section::-webkit-scrollbar-track,
+    #previewPanel::-webkit-scrollbar-track {
+      background: var(--gray-100);
+      border-radius: 4px;
+    }
+    
+    .selector-section::-webkit-scrollbar-thumb,
+    #previewPanel::-webkit-scrollbar-thumb {
+      background-color: var(--primary);
+      border-radius: 4px;
+    }
+    
+    /* Badges for difficulty */
+    .difficulty-badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .difficulty-easy {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+    
+    .difficulty-medium {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+    }
+    
+    .difficulty-hard {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+    
+    /* Floating action button */
+    .floating-action {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-end;
+    }
+    
+    .action-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-lg);
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      font-size: 1.5rem;
+    }
+    
+    .action-btn:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: var(--shadow-xl);
+      background: var(--primary-light);
+    }
+    
+    /* Stats bar */
+    .stats-bar {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .stat-card {
+      background: white;
+      border-radius: var(--border-radius-sm);
+      padding: 1rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      min-width: 140px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--gray-500);
+      font-weight: 500;
+    }
+    
+    /* Responsive */
+    @media (max-width: 900px) {
+      main {
+        width: 95%;
+      }
+      
+      header {
+        padding: 0.8rem;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .update-info {
+        margin-top: 0.5rem;
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .flex-row {
+        flex-direction: column;
+      }
+      
+      .selector-section {
+        max-width: 100%;
+        max-height: 260px;
+        margin-bottom: 2rem;
+      }
+      
+      #buttonsRow {
+        justify-content: center;
+      }
+      
+      button {
+        width: 100%;
+        max-width: 320px;
+        margin-right: 0 !important;
+      }
+      
+      .stats-bar {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .stat-card {
+        width: 100%;
+      }
+    }
+    
+    /* Animation for generated questions */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .question-block {
+      animation: fadeIn 0.5s ease-out forwards;
+      opacity: 0;
+    }
+    
+    /* Selection summary */
+    .selection-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      background: rgba(29, 66, 138, 0.05);
+      padding: 1rem;
+      border-radius: var(--border-radius-sm);
+      border-left: 4px solid var(--primary);
+    }
+    
+    .summary-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius-sm);
+      box-shadow: var(--shadow-sm);
+      font-size: 0.9rem;
+    }
+    
+    .summary-item::before {
+      content: "✓";
+      color: var(--success);
+      font-weight: bold;
+    }
+    
+    /* Loading spinner */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    /* Logout button */
+    .logout-btn {
+      background: var(--error);
+      color: white;
+      border-radius: 20px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      border: none;
+      margin-left: 10px;
+    }
+    
+    .logout-btn:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.15);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <h1>PPT Exam Generator</h1>
+      <p>Please enter your username and license key to access the application</p>
+      
+      <form class="login-form" id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required placeholder="Enter your username">
+        </div>
+        
+        <div class="form-group">
+          <label for="licenseKey">License Key</label>
+          <input type="text" id="licenseKey" name="licenseKey" required placeholder="Enter your license key">
+        </div>
+        
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+      
+      <div id="loginStatus" class="login-status"></div>
+      
+      <div class="license-info">
+        <p><strong>Need a license?</strong> Contact us at support@ppt.com</p>
+        <p>Each license is valid for one device only</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- App Container (hidden until login) -->
+  <div id="appContainer">
+    <header>
+      <div class="logo" tabindex="0" aria-label="Grade 4 Science Exam Generator Logo">PPT Exam Generator</div>
+      <div class="subtext"><a href="https://facebook.com/pptco" target="_blank" rel="noopener noreferrer">Made by PPT | facebook.com/pptco</a></div>
+      
+      <div class="user-info">
+        <span id="currentUser">User: Loading...</span>
+        <button class="logout-btn" id="logoutBtn">
+          <span>🚪</span> Logout
+        </button>
+      </div>
+      
+      <div class="update-info">
+        <span>Last updated: <span id="lastUpdatedDate">Loading...</span></span>
+        <button class="update-btn" id="checkUpdateBtn">
+          <span>🔄</span> Check for Updates
+        </button>
+      </div>
+    </header>
+    
+    <main>
+      <section class="card" aria-label="Exam Settings">
+        <h1 tabindex="0" id="appTitle">Science Exam Generator</h1>
+        
+        <div class="stats-bar">
+          <div class="stat-card">
+            <div class="stat-value" id="unitsCount">0</div>
+            <div class="stat-label">Units Selected</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="conceptsCount">0</div>
+            <div class="stat-label">Concepts Selected</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="lessonsCount">0</div>
+            <div class="stat-label">Lessons Selected</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="questionsCount">0</div>
+            <div class="stat-label">Available Questions</div>
+          </div>
+        </div>
+        
+        <div class="flex-row" id="unitsConceptsLessonsContainer" aria-live="polite">
+          <div style="text-align: center; width: 100%; padding: 2rem;">
+            <div class="spinner" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
+            <p>Loading question bank from server...</p>
+          </div>
+        </div>
+
+        <h2 tabindex="0">Question Types & Counts</h2>
+        <div class="flex-row inputs-row" aria-label="Question Type Count Inputs" role="form" tabindex="0">
+          <div style="flex: 1;">
+            <label for="chooseCount">Multiple Choice (choose) Count</label>
+            <input id="chooseCount" aria-describedby="chooseDesc" type="number" min="0" max="5000" value="2" />
+            <small id="chooseDesc">Number of chooses to include.</small>
+          </div>
+          <div style="flex: 1;">
+            <label for="tfCount">√ or X Count</label>
+            <input id="tfCount" aria-describedby="tfDesc" type="number" min="0" max="5000" value="2" />
+            <small id="tfDesc">Number of √ or X questions.</small>
+          </div>
+          <div style="flex: 1;">
+            <label for="fbCount">Complete Count</label>
+            <input id="fbCount" aria-describedby="fbDesc" type="number" min="0" max="5000" value="2" />
+            <small id="fbDesc">Number of fill in the blank questions.</small>
+          </div>
+          <div style="flex: 1;">
+            <label for="saCount">scientific term/ GR/ WH Count</label>
+            <input id="saCount" aria-describedby="saDesc" type="number" min="0" max="5000" value="2" />
+            <small id="saDesc">Number of Answer questions.</small>
+          </div>
+          <div style="flex: 1;">
+            <label for="imageCount">Look and answer Question Count</label>
+            <input id="imageCount" aria-describedby="imageDesc" type="number" min="0" max="5000" value="0" />
+            <small id="imageDesc">Number of image-based questions.</small>
+          </div>
+        </div>
+        
+        <div style="margin-top: 1.5rem;">
+          <label for="subtitleInput">Subtitle text for PDF</label>
+          <input id="subtitleInput" type="text" placeholder="Enter subtitle for PDF export" style="margin-top: 0.5rem;" />
+        </div>
+        
+
+        <div id="buttonsRow" role="group" aria-label="Action Buttons">
+          <button class="btn-primary" id="generateBtn" aria-live="polite" aria-atomic="true">
+            <span>⚡</span> Generate Exam
+          </button>
+          <button class="btn-all" id="generateAllBtn" aria-live="polite" aria-atomic="true">
+            <span>✨</span> Generate All Questions
+          </button>
+          <button class="btn-secondary" id="exportDocxBtn">
+            <span>📄</span> Export as DOCX
+          </button>
+          <button class="btn-secondary" id="exportPdfBtn">
+            <span>📊</span> Export as PDF
+          </button>
+          <button class="btn-primary" id="manualChooseBtn">
+            <span>🔍</span> Manual Choose Questions
+          </button>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Exam Preview">
+        <h2 tabindex="0">Live Preview</h2>
+        <div id="previewPanel" tabindex="0" aria-live="polite" aria-atomic="true" aria-describedby="previewHint" aria-label="Generated exam questions preview">
+          <em id="previewHint">No questions generated yet. Click "Generate Exam" to start.</em>
+        </div>
+      </section>
+    </main>
+    
+    <div class="floating-action">
+      <button class="action-btn" id="scrollTopBtn" title="Scroll to top">↑</button>
+      <button class="action-btn" id="clearSelectionBtn" title="Clear all selections">↺</button>
+    </div>
+
+    <div id="notification" role="alert" aria-live="assertive" aria-atomic="true"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/docx@7.4.0/build/index.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    (() => {
+      "use strict";
+
+     // ================================================
+      // SUPABASE CONFIGURATION (REPLACE WITH YOUR VALUES)
+      // ================================================
+      const SUPABASE_URL = 'https://yvwgbcmavsjfhnpaztwv.supabase.co';    
+      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2d2diY21hdnNqZmhucGF6dHd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1OTY1ODEsImV4cCI6MjA2OTE3MjU4MX0.Zx1w43DQULcCKCl9X8gdFk6qtfE_e_Rk9jdC8G_urxA';    // Project API key (anon public)
+      
+      // Embedded fallback question bank
+      const EMBEDDED_QUESTION_BANK = {
+        "lastUpdated": "2025-05-30",
+        "subtitle": "Grade 4 Science Exam Generator",
+        "questionBank": {
+          "Unit 1": {
+            "Concept 1": {
+              "Lesson 1": [
+               
+              ],
+              "Lesson 2": [
+                {id: "U1C1L2Q1", type: "choose", question: " .... ", options: ["....", "....", "..."], difficulty: "Easy"},
+       
+              ]
+            }
+          },
+          "التقييمات الأسبوعية": {
+            "التقييمات الأسبوعية": {
+              "Week 1": [
+                {id: "WEEK1_Q1", type: "choose", question: "What is the capital of France?", options: ["London", "Berlin", "Paris", "Madrid"], difficulty: "Easy"},
+                {id: "WEEK1_Q2", type: "√ or X", question: "The Earth is flat. (True/False)", difficulty: "Medium"}
+              ],
+              "Week 2": [
+                {id: "WEEK2_Q1", type: "Complete", question: "The largest planet in our solar system is _______.", difficulty: "Easy"},
+                {id: "WEEK2_Q2", type: "Answer", question: "Name two types of rocks.", difficulty: "Hard"}
+              ],
+              "Week 3": [
+                {id: "WEEK3_Q1", type: "choose", question: "What is the chemical symbol for water?", options: ["H2O", "CO2", "O2", "NaCl"], difficulty: "Easy"},
+                {id: "WEEK3_Q2", type: "√ or X", question: "Photosynthesis occurs only during the day. (True/False)", difficulty: "Medium"}
+              ],
+              "Week 4": [
+                {id: "WEEK4_Q1", type: "Complete", question: "The process of water turning into vapor is called _______.", difficulty: "Medium"},
+                {id: "WEEK4_Q2", type: "Answer", question: "What causes seasons on Earth?", difficulty: "Hard"}
+              ],
+              "Week 5": [
+                {id: "WEEK5_Q1", type: "choose", question: "Which animal is not a mammal?", options: ["Dolphin", "Bat", "Penguin", "Whale"], difficulty: "Medium"},
+                {id: "WEEK5_Q2", type: "Look and answer", question: "Identify the animal in the image", image: "https://example.com/animal.jpg", difficulty: "Easy"}
+              ],
+              "Week 6": [
+                {id: "WEEK6_Q1", type: "Complete", question: "The smallest unit of life is the _______.", difficulty: "Easy"},
+                {id: "WEEK6_Q2", type: "√ or X", question: "Bacteria have a nucleus. (True/False)", difficulty: "Hard"}
+              ],
+              "Week 7": [
+                {id: "WEEK7_Q1", type: "choose", question: "What force keeps planets in orbit around the sun?", options: ["Magnetism", "Gravity", "Friction", "Electricity"], difficulty: "Medium"},
+                {id: "WEEK7_Q2", type: "Answer", question: "Explain Newton's First Law of Motion.", difficulty: "Hard"}
+              ],
+              "Week 8": [
+                {id: "WEEK8_Q1", type: "Look and answer", question: "Identify this plant cell structure", image: "https://example.com/plantcell.jpg", difficulty: "Medium"},
+                {id: "WEEK8_Q2", type: "Complete", question: "The process by which plants make food is called _______.", difficulty: "Easy"}
+              ],
+              "Week 9": [
+                {id: "WEEK9_Q1", type: "√ or X", question: "Sound travels faster in water than in air. (True/False)", difficulty: "Medium"},
+                {id: "WEEK9_Q2", type: "choose", question: "Which element has the atomic number 1?", options: ["Helium", "Hydrogen", "Oxygen", "Carbon"], difficulty: "Easy"}
+              ],
+              "Week 10": [
+                {id: "WEEK10_Q1", type: "Answer", question: "What are the three states of matter?", difficulty: "Easy"},
+                {id: "WEEK10_Q2", type: "Look and answer", question: "Identify the type of rock shown", image: "https://example.com/rock.jpg", difficulty: "Medium"}
+              ],
+              "Week 11": [
+                {id: "WEEK11_Q1", type: "Complete", question: "The human body has _______ bones.", difficulty: "Medium"},
+                {id: "WEEK11_Q2", type: "√ or X", question: "All bacteria are harmful. (True/False)", difficulty: "Hard"}
+              ],
+              "Week 12": [
+                {id: "WEEK12_Q1", type: "choose", question: "What is the largest organ in the human body?", options: ["Liver", "Brain", "Skin", "Heart"], difficulty: "Easy"},
+                {id: "WEEK12_Q2", type: "Answer", question: "Name the five senses.", difficulty: "Easy"}
+              ],
+              "Week 13": [
+                {id: "WEEK13_Q1", type: "Look and answer", question: "Identify this constellation", image: "https://example.com/constellation.jpg", difficulty: "Hard"},
+                {id: "WEEK13_Q2", type: "Complete", question: "The closest star to Earth is _______.", difficulty: "Medium"}
+              ],
+              "Week 14": [
+                {id: "WEEK14_Q1", type: "√ or X", question: "Light travels faster than sound. (True/False)", difficulty: "Easy"},
+                {id: "WEEK14_Q2", type: "choose", question: "Which planet is known as the Red Planet?", options: ["Venus", "Mars", "Jupiter", "Saturn"], difficulty: "Easy"}
+              ],
+              "Week 15": [
+                {id: "WEEK15_Q1", type: "Answer", question: "What is the water cycle?", difficulty: "Medium"},
+                {id: "WEEK15_Q2", type: "Look and answer", question: "Identify the weather instrument shown", image: "https://example.com/weather.jpg", difficulty: "Medium"}
+              ]
+            }
+          }
+        }
+      };
+      
+    // Global variables
+      let questionBank = {};
+      let selectedUnits = new Set();
+      let selectedConcepts = new Map();
+      let selectedLessons = new Map();
+      let generatedQuestions = [];
+      let currentUser = null;
+      let deviceId = null;
+      
+      // DOM elements
+      const loginScreen = document.getElementById('loginScreen');
+      const appContainer = document.getElementById('appContainer');
+      const loginForm = document.getElementById('loginForm');
+      const loginStatus = document.getElementById('loginStatus');
+      const currentUserEl = document.getElementById('currentUser');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const unitsConceptsLessonsContainer = document.getElementById('unitsConceptsLessonsContainer');
+      const chooseCountInput = document.getElementById('chooseCount');
+      const tfCountInput = document.getElementById('tfCount');
+      const fbCountInput = document.getElementById('fbCount');
+      const saCountInput = document.getElementById('saCount');
+      const imageCountInput = document.getElementById('imageCount');
+      const generateBtn = document.getElementById('generateBtn');
+      const generateAllBtn = document.getElementById('generateAllBtn');
+      const exportDocxBtn = document.getElementById('exportDocxBtn');
+      const exportPdfBtn = document.getElementById('exportPdfBtn');
+      const previewPanel = document.getElementById('previewPanel');
+      const notification = document.getElementById('notification');
+      const subtitleInput = document.getElementById('subtitleInput');
+      const manualChooseBtn = document.getElementById('manualChooseBtn');
+      const scrollTopBtn = document.getElementById('scrollTopBtn');
+      const clearSelectionBtn = document.getElementById('clearSelectionBtn');
+      const unitsCount = document.getElementById('unitsCount');
+      const conceptsCount = document.getElementById('conceptsCount');
+      const lessonsCount = document.getElementById('lessonsCount');
+      const questionsCount = document.getElementById('questionsCount');
+      const lastUpdatedDateEl = document.getElementById('lastUpdatedDate');
+      const checkUpdateBtn = document.getElementById('checkUpdateBtn');
+      const appTitle = document.getElementById('appTitle');
+
+      // Create element helper function
+      function createEl(type, attrs = {}, children = []) {
+        const el = document.createElement(type);
+        for (const [k, v] of Object.entries(attrs)) {
+          if (k.startsWith('on') && typeof v === 'function') {
+            el.addEventListener(k.substr(2), v);
+          } else if(k === 'checked' && v === true){
+            el.checked = true;
+          } else if(k === 'html'){
+            el.innerHTML = v;
+          } else {
+            el.setAttribute(k, v);
+          }
+        }
+        if (!Array.isArray(children)) {
+          children = [children];
+        }
+        children.forEach(child => {
+          if (typeof child === 'string') el.appendChild(document.createTextNode(child));
+          else if (child) el.appendChild(child);
+        });
+        return el;
+      }
+
+      // Notification function
+      function showNotification(msg, duration = 3500, isWarning = false, isInfo = false) {
+        notification.textContent = msg;
+        notification.classList.remove('warning', 'info');
+        if (isWarning) {
+          notification.classList.add('warning');
+        } else if (isInfo) {
+          notification.classList.add('info');
+        }
+        notification.classList.add('show');
+        setTimeout(() => notification.classList.remove('show'), duration);
+      }
+      
+      // Generate a unique device ID
+      function generateDeviceId() {
+        // Try to get existing ID from localStorage
+        let id = localStorage.getItem('ppt_device_id');
+        
+        // If not found, generate a new one
+        if (!id) {
+          id = 'ppt_' + Math.random().toString(36).substr(2, 9);
+          localStorage.setItem('ppt_device_id', id);
+        }
+        
+        return id;
+      }
+      
+      // Validate license key with Supabase
+      async function validateLicense(username, licenseKey) {
+        try {
+          const response = await fetch(`${SUPABASE_URL}/rest/v1/license?license_key=eq.${licenseKey}`, {
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`
+            }
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to validate license');
+          }
+          
+          const data = await response.json();
+          if (!data || data.length === 0) {
+            return { valid: false, message: "Invalid license key" };
+          }
+          
+          const license = data[0];
+          
+          // Check if license is expired
+          const now = new Date();
+          const expiryDate = new Date(license.expires_at);
+          if (now > expiryDate) {
+            return { valid: false, message: "License has expired" };
+          }
+          
+          // Check if license is assigned to this user
+          if (license.username !== username) {
+            return { valid: false, message: "License not assigned to this user" };
+          }
+          
+          // Check if license is already in use on another device
+          if (license.device_id && license.device_id !== deviceId) {
+            return { valid: false, message: "License is already in use on another device" };
+          }
+          
+          return { valid: true, license };
+          
+        } catch (error) {
+          console.error('License validation error:', error);
+          return { valid: false, message: "Error validating license" };
+        }
+      }
+      
+      // Record user activity in Supabase
+      async function recordUserActivity(action) {
+        if (!currentUser) return;
+        
+        try {
+          await fetch(`${SUPABASE_URL}/rest/v1/user_activity`, {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+              username: currentUser,
+              device_id: deviceId,
+              action: action,
+              timestamp: new Date().toISOString()
+            })
+          });
+        } catch (error) {
+          console.error('Failed to record activity:', error);
+        }
+      }
+      
+      // Update device ID for license in Supabase
+      async function updateLicenseDevice(licenseKey, deviceId) {
+        try {
+          await fetch(`${SUPABASE_URL}/rest/v1/license?license_key=eq.${licenseKey}`, {
+            method: 'PATCH',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+              device_id: deviceId,
+              last_used: new Date().toISOString()
+            })
+          });
+        } catch (error) {
+          console.error('Failed to update license:', error);
+        }
+      }
+      
+      // Login function
+      async function login(username, licenseKey) {
+        // Show loading state
+        loginStatus.textContent = "Validating license...";
+        loginStatus.className = "login-status info";
+        loginStatus.style.display = "block";
+        
+        try {
+          // Validate license
+          const validation = await validateLicense(username, licenseKey);
+          
+          if (!validation.valid) {
+            loginStatus.textContent = validation.message;
+            loginStatus.className = "login-status error";
+            return;
+          }
+          
+          // Update device ID for license
+          await updateLicenseDevice(licenseKey, deviceId);
+          
+          // Record user activity
+          await recordUserActivity('login');
+          
+          // Store user info in localStorage
+          localStorage.setItem('ppt_user', JSON.stringify({
+            username: username,
+            licenseKey: licenseKey,
+            deviceId: deviceId,
+            lastLogin: new Date().toISOString()
+          }));
+          
+          // Set current user
+          currentUser = username;
+          currentUserEl.textContent = `User: ${username}`;
+          
+          // Show success message
+          loginStatus.textContent = "Login successful! Loading application...";
+          loginStatus.className = "login-status success";
+          
+          // Hide login screen, show app
+          setTimeout(() => {
+            loginScreen.style.display = "none";
+            appContainer.style.display = "block";
+            initApp();
+          }, 1500);
+          
+        } catch (error) {
+          console.error('Login error:', error);
+          loginStatus.textContent = "An error occurred during login";
+          loginStatus.className = "login-status error";
+        }
+      }
+      
+      // Logout function
+      async function logout() {
+        try {
+          // Record user activity
+          await recordUserActivity('logout');
+          
+          // Clear license device ID
+          const userData = JSON.parse(localStorage.getItem('ppt_user'));
+          if (userData && userData.licenseKey) {
+            await updateLicenseDevice(userData.licenseKey, null);
+          }
+          
+          // Clear stored data
+          localStorage.removeItem('ppt_user');
+          currentUser = null;
+          
+          // Show login screen
+          loginScreen.style.display = "flex";
+          appContainer.style.display = "none";
+          
+          // Reset login form
+          loginForm.reset();
+          loginStatus.style.display = "none";
+          
+        } catch (error) {
+          console.error('Logout error:', error);
+          showNotification('Error during logout', 3000, true);
+        }
+      }
+      
+      // Check for existing session
+      function checkExistingSession() {
+        const userData = JSON.parse(localStorage.getItem('ppt_user'));
+        
+        if (userData && userData.username && userData.licenseKey && userData.deviceId === deviceId) {
+          // Auto-login
+          login(userData.username, userData.licenseKey);
+        }
+      }
+      
+      // NEW: Load question bank from Supabase
+      async function loadQuestionBank() {
+        try {
+          // Show loading state
+          unitsConceptsLessonsContainer.innerHTML = `
+            <div style="text-align: center; width: 100%; padding: 2rem;">
+              <div class="spinner" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
+              <p>Loading question bank from server...</p>
+            </div>
+          `;
+          
+          // Fetch from Supabase
+          const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/question_bank?select=data,last_updated&order=last_updated.desc&limit=1`,
+            {
+              headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`
+              }
+            }
+          );
+          
+          if (!response.ok) {
+            throw new Error('Failed to load from Supabase');
+          }
+          
+          const data = await response.json();
+          if (!data || data.length === 0) {
+            throw new Error('No data in Supabase');
+          }
+          
+          // Use the first row (latest)
+          const latest = data[0];
+          
+          // Update UI with new data
+          questionBank = latest.data.questionBank;
+          lastUpdatedDateEl.textContent = new Date(latest.last_updated).toLocaleDateString();
+          
+          if (latest.data.subtitle) {
+            appTitle.textContent = latest.data.subtitle;
+          }
+          
+          // Render UI with new data
+          renderSelectionUI();
+          showNotification('Question bank loaded successfully!', 3000, false, true);
+          
+          return true;
+        } catch (error) {
+          console.error('Supabase error:', error);
+          
+          // Use embedded data as fallback
+          questionBank = EMBEDDED_QUESTION_BANK.questionBank;
+          lastUpdatedDateEl.textContent = EMBEDDED_QUESTION_BANK.lastUpdated;
+          appTitle.textContent = EMBEDDED_QUESTION_BANK.subtitle;
+          
+          renderSelectionUI();
+          showNotification('Using embedded question bank. Could not load from server.', 5000, true);
+          
+          return false;
+        }
+      }
+      // Update stats
+      function updateStats() {
+        // Update units count
+        unitsCount.textContent = selectedUnits.size;
+        
+        // Update concepts count
+        let conceptCount = 0;
+        selectedConcepts.forEach(set => {
+          conceptCount += set.size;
+        });
+        conceptsCount.textContent = conceptCount;
+        
+        // Update lessons count
+        let lessonCount = 0;
+        selectedLessons.forEach(map => {
+          map.forEach(set => {
+            lessonCount += set.size;
+          });
+        });
+        lessonsCount.textContent = lessonCount;
+        
+        // Update available questions count
+        questionsCount.textContent = getFilteredQuestions().length;
+      }
+
+      // Render selection UI
+      function renderSelectionUI() {
+        unitsConceptsLessonsContainer.innerHTML = '';
+        selectedUnits.clear();
+        selectedConcepts.clear();
+        selectedLessons.clear();
+
+        const unitsSelector = createEl('section', { class: 'selector-section', 'aria-label': 'Units Selection' });
+        const unitsFieldset = createEl('fieldset', { class: 'checkbox-group' });
+        const legend = createEl('legend', {}, 'Units');
+        unitsFieldset.appendChild(legend);
+
+        Object.keys(questionBank).forEach(unit => {
+          const id = 'unit-' + unit.replace(/\s+/g, '');
+          const checkbox = createEl('input', { type: 'checkbox', id: id, name: 'units', value: unit });
+          const label = createEl('label', { for: id }, [checkbox, unit]);
+          checkbox.addEventListener('change', e => {
+            if (e.target.checked) {
+              selectedUnits.add(unit);
+              if(!selectedConcepts.has(unit)){
+                selectedConcepts.set(unit, new Set());
+              }
+              if(!selectedLessons.has(unit)){
+                selectedLessons.set(unit, new Map());
+              }
+            } else {
+              selectedUnits.delete(unit);
+              selectedConcepts.delete(unit);
+              selectedLessons.delete(unit);
+            }
+            renderConceptsLessonsUI();
+            updateStats();
+          });
+          unitsFieldset.appendChild(label);
+        });
+        unitsSelector.appendChild(unitsFieldset);
+        unitsConceptsLessonsContainer.appendChild(unitsSelector);
+
+        renderConceptsLessonsUI();
+        updateStats();
+      }
+
+      // Render concepts and lessons UI
+      function renderConceptsLessonsUI() {
+        while (unitsConceptsLessonsContainer.children.length > 1) {
+          unitsConceptsLessonsContainer.removeChild(unitsConceptsLessonsContainer.lastChild);
+        }
+        selectedUnits.forEach(unit => {
+          const container = createEl('section', { class: 'selector-section', 'aria-label': `${unit} selection` });
+          const unitTitle = createEl('h3', {}, unit);
+          container.appendChild(unitTitle);
+
+          const conceptsFieldset = createEl('fieldset', { class: 'checkbox-group' });
+          const conceptsLegend = createEl('legend', {}, 'Concepts');
+          conceptsFieldset.appendChild(conceptsLegend);
+
+          const conceptsSet = selectedConcepts.get(unit) || new Set();
+          const concepts = Object.keys(questionBank[unit] || {});
+          concepts.forEach(concept => {
+            const cid = `concept-${unit.replace(/\s+/g,'')}-${concept.replace(/\s+/g,'')}`;
+            const checkbox = createEl('input', { type: 'checkbox', id: cid, value: concept, name: `concepts-${unit}` });
+            if(conceptsSet.has(concept)){
+              checkbox.checked = true;
+            }
+            checkbox.addEventListener('change', e => {
+              const sel = selectedConcepts.get(unit) || new Set();
+              if(e.target.checked){
+                sel.add(concept);
+              } else {
+                sel.delete(concept);
+                const lessonMap = selectedLessons.get(unit) || new Map();
+                lessonMap.delete(concept);
+                selectedLessons.set(unit, lessonMap);
+              }
+              selectedConcepts.set(unit, sel);
+              renderLessonsUI(unit);
+              updateStats();
+            });
+            const label = createEl('label', { for: cid }, [checkbox, concept]);
+            conceptsFieldset.appendChild(label);
+          });
+          container.appendChild(conceptsFieldset);
+
+          const lessonsFieldset = createEl('fieldset', { class: 'checkbox-group', id: `lessons-${unit.replace(/\s+/g,'')}` });
+          const lessonsLegend = createEl('legend', {}, 'Lessons');
+          lessonsFieldset.appendChild(lessonsLegend);
+          container.appendChild(lessonsFieldset);
+
+          unitsConceptsLessonsContainer.appendChild(container);
+
+          renderLessonsUI(unit);
+        });
+        updateStats();
+      }
+
+      // Render lessons UI
+      function renderLessonsUI(unit) {
+        const lessonsFieldset = document.getElementById(`lessons-${unit.replace(/\s+/g,'')}`);
+        if (!lessonsFieldset) return;
+        lessonsFieldset.innerHTML = '';
+        const lessonsLegend = createEl('legend', {}, 'Lessons');
+        lessonsFieldset.appendChild(lessonsLegend);
+
+        const conceptsSet = selectedConcepts.get(unit) || new Set();
+        const lessonMap = selectedLessons.get(unit) || new Map();
+
+        conceptsSet.forEach(concept => {
+          const lessons = Object.keys((questionBank[unit] && questionBank[unit][concept]) || {});
+          if(lessons.length === 0) return;
+          const conceptTitle = createEl('h4', { style: 'margin-top:1rem; margin-bottom:0.5rem; font-weight:600; color: var(--primary);' }, concept);
+          lessonsFieldset.appendChild(conceptTitle);
+          lessons.forEach(lesson => {
+            const lid = `lesson-${unit.replace(/\s+/g,'')}-${concept.replace(/\s+/g,'')}-${lesson.replace(/\s+/g,'')}`;
+            const checkbox = createEl('input', { type: 'checkbox', id: lid, value: lesson, name: `lessons-${unit}-${concept}` });
+            if(lessonMap.has(concept) && lessonMap.get(concept).has(lesson)) {
+              checkbox.checked = true;
+            }
+            checkbox.addEventListener('change', e => {
+              const conceptLessons = lessonMap.get(concept) || new Set();
+              if(e.target.checked){
+                conceptLessons.add(lesson);
+              } else {
+                conceptLessons.delete(lesson);
+              }
+              lessonMap.set(concept, conceptLessons);
+              selectedLessons.set(unit, lessonMap);
+              updateStats();
+            });
+            const label = createEl('label', { for: lid }, [checkbox, lesson]);
+            lessonsFieldset.appendChild(label);
+          });
+        });
+        updateStats();
+      }
+
+      // Shuffle array
+      function shuffleArray(arr) {
+        for(let i = arr.length -1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i+1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      // Get filtered questions
+      function getFilteredQuestions() {
+        const questionsList = [];
+        selectedUnits.forEach(unit => {
+          const lessonMap = selectedLessons.get(unit);
+          if(!lessonMap) return;
+          lessonMap.forEach((lessonsSet, concept) => {
+            if(!lessonsSet || lessonsSet.size === 0) return;
+            lessonsSet.forEach(lesson => {
+              const questions = ((questionBank[unit] && questionBank[unit][concept] && questionBank[unit][concept][lesson]) || []);
+              questions.forEach(q => {
+                questionsList.push({...q, meta: {unit, concept, lesson}});
+              });
+            });
+          });
+        });
+        return questionsList;
+      }
+
+      // Pick questions (FIXED: Removed usedIds to prevent conflicts)
+      function pickQuestions(type, count) {
+        let pool = getFilteredQuestions().filter(q => q.type === type);
+        
+        // For image questions, filter only those with images
+        if (type === "Look and answer") {
+            pool = pool.filter(q => q.image);
+        }
+        
+        const shuffledPool = shuffleArray(pool);
+        const picked = [];
+        for(const q of shuffledPool){
+          if(picked.length >= count) break;
+          picked.push(q);
+        }
+        return picked;
+      }
+
+      // Render preview
+      function renderPreview(questions) {
+        if(questions.length === 0) {
+          previewPanel.innerHTML = '<em>No questions match the selected criteria.</em>';
+          return;
+        }
+        const grouped = questions.reduce((acc, q) => {
+          (acc[q.type] = acc[q.type] || []).push(q);
+          return acc;
+        }, {});
+
+        let html = '';
+        ['choose','√ or X','Complete','Answer','Look and answer'].forEach(type => {
+          if(!grouped[type] || grouped[type].length === 0) return;
+
+          html += `<section aria-label="${type} questions"><h2>${type}</h2>`;
+          grouped[type].forEach((q, i) => {
+            const difficultyClass = `difficulty-${q.difficulty.toLowerCase()}`;
+            html += `<article class="question-block" tabindex="0">
+              <div class="question-header">${i+1}. ${q.question}</div>
+              <div class="question-meta">
+                <span>${q.meta.unit} → ${q.meta.concept} → ${q.meta.lesson}</span>
+                <span class="difficulty-badge ${difficultyClass}">${q.difficulty}</span>
+              </div>`;
+            
+            // Add image if present
+            if (type === "Look and answer" && q.image) {
+              html += `<div style="margin: 10px 0;">
+                <img src="${q.image}" alt="Question image" style="max-width: 100%; max-height: 200px; display: block; margin: 10px 0;">
+              </div>`;
+            }
+            
+            if(q.type === "choose" && q.options){
+              html += '<ul class="options-list" aria-label="Choices">';
+              q.options.forEach(opt => {
+                html += `<li>${opt}</li>`;
+              });
+              html += '</ul>';
+            }
+            html += `</article>`;
+          });
+          html += '</section>';
+        });
+        previewPanel.innerHTML = html;
+        
+        // Animate the question blocks with staggered delay
+        const questionBlocks = previewPanel.querySelectorAll('.question-block');
+        questionBlocks.forEach((block, index) => {
+          block.style.animationDelay = `${index * 0.1}s`;
+        });
+      }
+
+      // Generate exam
+      function generateExam() {
+        if(selectedUnits.size === 0){
+          showNotification('Please select at least one Unit.');
+          return;
+        }
+        let totalSelectedLessons = 0;
+        selectedLessons.forEach(lessonMap => {
+          lessonMap.forEach(lsSet => {
+            totalSelectedLessons += lsSet.size;
+          });
+        });
+        if(totalSelectedLessons === 0){
+          showNotification('Please select at least one Lesson.');
+          return;
+        }
+
+        const chooseCount = Math.max(0, Math.min(parseInt(chooseCountInput.value) || 0, 5000));
+        const tfCount = Math.max(0, Math.min(parseInt(tfCountInput.value) || 0, 5000));
+        const fbCount = Math.max(0, Math.min(parseInt(fbCountInput.value) || 0, 5000));
+        const saCount = Math.max(0, Math.min(parseInt(saCountInput.value) || 0, 5000));
+        const imageCount = Math.max(0, Math.min(parseInt(imageCountInput.value) || 0, 5000));
+
+        let questions = [];
+        questions = questions.concat(pickQuestions('choose', chooseCount));
+        questions = questions.concat(pickQuestions('√ or X', tfCount));
+        questions = questions.concat(pickQuestions('Complete', fbCount));
+        questions = questions.concat(pickQuestions('Answer', saCount));
+        questions = questions.concat(pickQuestions('Look and answer', imageCount));
+        generatedQuestions = questions;
+
+        renderPreview(questions);
+        showNotification(`Generated ${questions.length} questions.`);
+        
+        // Record activity
+        recordUserActivity('generate_exam');
+      }
+
+      // Generate all questions (NEW FUNCTION)
+      function generateAllQuestions() {
+        if(selectedUnits.size === 0){
+          showNotification('Please select at least one Unit.');
+          return;
+        }
+        let totalSelectedLessons = 0;
+        selectedLessons.forEach(lessonMap => {
+          lessonMap.forEach(lsSet => {
+            totalSelectedLessons += lsSet.size;
+          });
+        });
+        if(totalSelectedLessons === 0){
+          showNotification('Please select at least one Lesson.');
+          return;
+        }
+
+        generatedQuestions = getFilteredQuestions();
+        renderPreview(generatedQuestions);
+        showNotification(`Generated all ${generatedQuestions.length} questions.`);
+        
+        // Record activity
+        recordUserActivity('generate_all_questions');
+      }
+
+      // Manual choose questions
+      function manualChooseQuestions() {
+        if(selectedUnits.size === 0){
+          showNotification('Please select at least one Unit before manual choosing.');
+          return;
+        }
+        let totalSelectedLessons = 0;
+        selectedLessons.forEach(lessonMap => {
+          lessonMap.forEach(lsSet => {
+            totalSelectedLessons += lsSet.size;
+          });
+        });
+        if(totalSelectedLessons === 0){
+          showNotification('Please select at least one Lesson before manual choosing.');
+          return;
+        }
+
+        const availableQuestions = getFilteredQuestions();
+        if(availableQuestions.length === 0){
+          showNotification('No questions available for selected filters.');
+          return;
+        }
+
+        // Create modal elements
+        const modalBackground = createEl('div', {
+          style: `
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          `,
+          role: 'dialog',
+          'aria-modal': 'true',
+          'aria-label': 'Manual Question Selection Dialog'
+        });
+
+        const modal = createEl('div', {
+          style: `
+            background: var(--light);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            flex-direction: column;
+          `
+        });
+
+        const modalTitle = createEl('h2', {tabindex: 0, style: "color: var(--primary); margin-bottom: 1rem;"}, 'Manual Question Selection');
+
+        const instructions = createEl('p', {style: "margin-bottom: 1.5rem; color: var(--gray-700);"}, 'Select questions to include in your exam. Use Shift+Click to select multiple questions.');
+
+        // Container for the list
+        const listContainer = createEl('div', {
+          style: `
+            overflow-y: auto;
+            flex-grow: 1;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--border-radius-sm);
+            padding: 1rem;
+            max-height: 50vh;
+          `
+        });
+
+        // Build checkbox list of questions
+        availableQuestions.forEach(q => {
+          const checkbox = createEl('input', { 
+            type: 'checkbox', 
+            id: `manualq-${q.id}`, 
+            value: q.id,
+            style: "flex-shrink: 0;"
+          });
+          
+          // Preserve currently generated questions selections
+          if(generatedQuestions.find(gq => gq.id === q.id)) {
+            checkbox.checked = true;
+          }
+          
+          const labelText = createEl('div', { 
+            style: "margin-left: 0.5rem; user-select:text; flex-grow: 1;" 
+          }, `${q.question}`);
+          
+          const metaInfo = createEl('div', {
+            style: "font-size: 0.85rem; color: var(--gray-500); margin-top: 0.3rem;"
+          }, `${q.meta.unit} → ${q.meta.concept} → ${q.meta.lesson}`);
+          
+          const difficultyClass = `difficulty-${q.difficulty.toLowerCase()}`;
+          const difficultyBadge = createEl('span', {
+            class: `difficulty-badge ${difficultyClass}`,
+            style: "margin-left: 0.5rem;"
+          }, q.difficulty);
+          
+          const questionContainer = createEl('div', {
+            style: "display: flex; flex-direction: column;"
+          }, [labelText, metaInfo]);
+          
+          const rightContainer = createEl('div', {
+            style: "display: flex; align-items: center; gap: 1rem;"
+          }, [difficultyBadge]);
+          
+          // Add image preview if available
+          if (q.image) {
+            rightContainer.appendChild(createEl('img', {
+              src: q.image,
+              alt: 'Question image',
+              style: 'max-width: 60px; max-height: 40px; margin-left: 0.5rem;'
+            }));
+          }
+          
+          const container = createEl('div', { 
+            style: "margin-bottom: 1rem; display:flex; align-items: flex-start; gap: 0.8rem; padding: 0.8rem; border-radius: var(--border-radius-sm); border: 1px solid var(--gray-200);" 
+          }, [checkbox, questionContainer, rightContainer]);
+          
+          container.addEventListener('click', (e) => {
+            if(e.target !== checkbox) {
+              checkbox.checked = !checkbox.checked;
+            }
+          });
+          
+          listContainer.appendChild(container);
+        });
+
+        const btnContainer = createEl('div', { style: 'display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;' });
+        const cancelButton = createEl('button', { 
+          type: 'button',
+          class: 'btn-secondary',
+          style: "padding: 0.7rem 1.5rem;"
+        }, 'Cancel');
+        const saveButton = createEl('button', { 
+          type: 'button',
+          class: 'btn-primary',
+          style: "padding: 0.7rem 1.5rem;"
+        }, 'Save Selection');
+
+        btnContainer.appendChild(cancelButton);
+        btnContainer.appendChild(saveButton);
+
+        modal.appendChild(modalTitle);
+        modal.appendChild(instructions);
+        modal.appendChild(listContainer);
+        modal.appendChild(btnContainer);
+        modalBackground.appendChild(modal);
+        document.body.appendChild(modalBackground);
+
+        // Accessibility focus
+        modalTitle.focus();
+
+        cancelButton.onclick = () => {
+          document.body.removeChild(modalBackground);
+          showNotification('Manual choose cancelled.');
+        };
+
+        saveButton.onclick = () => {
+          const checkedIds = new Set();
+          listContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => checkedIds.add(cb.value));
+          generatedQuestions = availableQuestions.filter(q => checkedIds.has(q.id));
+          renderPreview(generatedQuestions);
+          document.body.removeChild(modalBackground);
+          showNotification(`Saved ${generatedQuestions.length} manually chosen questions.`);
+          
+          // Record activity
+          recordUserActivity('manual_choose');
+        };
+      }
+
+      // Export DOCX
+      async function exportDocx() {
+        if (generatedQuestions.length === 0) {
+          showNotification('No questions to export! Please generate an exam first.');
+          return;
+        }
+        
+        const {
+          Document,
+          Packer,
+          Paragraph,
+          TextRun,
+          HeadingLevel,
+          AlignmentType,
+          Footer,
+          Header,
+          SectionType,
+          PageNumberFormat,
+          PageNumber
+        } = window.docx;
+
+        const doc = new Document({
+          sections: [{
+            properties: {
+              page: {
+                margin: { top: 100, bottom: 100, left: 1440, right: 100 } // 1 inch margins
+              }
+            },
+            headers: {
+              default: new Header({
+                children: [
+                  new Paragraph({
+                    alignment: AlignmentType.CENTER,
+                    children: [
+                      new TextRun({
+                        text: "",
+                        bold: true,
+                        size: 24,
+                        color: "1d428a"
+                      })
+                    ]
+                  }),
+                  new Paragraph({
+                    alignment: AlignmentType.CENTER,
+                    children: [
+                      
+                    ]
+                  })
+                ]
+              })
+            },
+            footers: {
+              default: new Footer({
+                children: [
+                  new Paragraph({
+                    alignment: AlignmentType.CENTER,
+                    children: [
+                      new TextRun({
+                        text: "Page ",
+                        size: 18,
+                        color: "6B7280"
+                      }),
+                      PageNumber.CURRENT,
+                      new TextRun({
+                        text: " of ",
+                        size: 18,
+                        color: "6B7280"
+                      }),
+                      PageNumber.TOTAL_PAGES
+                    ]
+                  }),
+                  new Paragraph({
+                    alignment: AlignmentType.CENTER,
+                    children: [
+                      new TextRun({
+                        text: "",
+                        italics: true,
+                        size: 16,
+                        color: "6B7280"
+                      })
+                    ]
+                  })
+                ]
+              })
+            },
+            children: []
+          }]
+        });
+
+        // Add title and subtitle
+        doc.addSection({
+          properties: {
+            type: SectionType.CONTINUOUS
+          },
+          children: [
+            new Paragraph({
+              text: "Grade 4 Science Exam",
+              heading: HeadingLevel.HEADING_1,
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 300 }
+            }),
+            (() => {
+              const subtitleText = subtitleInput.value.trim();
+              if (subtitleText.length > 0) {
+                return new Paragraph({
+                  text: subtitleText,
+                  alignment: AlignmentType.CENTER,
+                  italics: true,
+                  spacing: { after: 600 },
+                  size: 20,
+                  color: "374151"
+                });
+              }
+              return new Paragraph({ text: "", spacing: { after: 600 } });
+            })()
+          ]
+        });
+
+        // Group questions by type
+        const questionsByType = generatedQuestions.reduce((acc, q) => {
+          acc[q.type] = (acc[q.type] || []);
+          acc[q.type].push(q);
+          return acc;
+        }, {});
+
+        // Define question type titles
+        const typeTitles = {
+          'choose': 'Multiple Choice (choose)',
+          '√ or X': '√ or X',
+          'Complete': 'Complete',
+          'Answer': 'Answer',
+          'Look and answer': 'Look and answer Questions'
+        };
+
+        // Add each question type section
+        ['choose', '√ or X', 'Complete', 'Answer', 'Look and answer'].forEach(type => {
+          if (!questionsByType[type] || questionsByType[type].length === 0) return;
+
+          // Add section heading
+          doc.addSection({
+            properties: {
+              type: SectionType.CONTINUOUS
+            },
+            children: [
+              new Paragraph({
+                text: typeTitles[type] || type,
+                heading: HeadingLevel.HEADING_1,
+                spacing: { before: 400, after: 200 },
+                border: { bottom: { style: "single", size: 8, color: "1d428a" } }
+              })
+            ]
+          });
+
+          // Add each question
+          questionsByType[type].forEach((q, i) => {
+            const children = [
+              new Paragraph({
+                text: `${i + 1}. ${q.question}`,
+                heading: HeadingLevel.HEADING_3,
+                spacing: { after: 100 }
+              }),
+              
+            ];
+            
+            if (q.type === 'choose' && q.options && q.options.length > 0) {
+              q.options.forEach((opt, idx) => {
+                children.push(new Paragraph({
+                  text: `${String.fromCharCode(65 + idx)}. ${opt}`,
+                  indent: { left: 720 },
+                  spacing: { after: 80 }
+                }));
+              });
+            }
+            
+            doc.addSection({
+              properties: {
+                type: SectionType.CONTINUOUS
+              },
+              children: children
+            });
+          });
+        });
+
+        // Generate the DOCX file
+        const blob = await Packer.toBlob(doc);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Grade4_Science_Exam_${new Date().toISOString().split('T')[0]}.docx`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showNotification('DOCX exported successfully!');
+        
+        // Record activity
+        recordUserActivity('export_docx');
+      }
+
+      // Export PDF
+      function exportPdf() {
+        if(generatedQuestions.length === 0){
+          showNotification('No questions to export! Please generate an exam first.');
+          return;
+        }
+        
+        const subject = "Grade 4 Science Exam";
+        const subtitleText = subtitleInput.value.trim();
+        const today = new Date();
+        const dateStr = today.toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'});
+
+        // PDF header with smaller title and removed hyperlink
+        let html = `
+          <div style="
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+            'Open Sans', 'Helvetica Neue', sans-serif;
+            color: #1d1d1f;
+            background: #fff;
+            padding: 1px 1px 1px 1px;
+            max-width: 700px;
+            margin: auto;
+            font-weight: 500;
+            font-size: 1rem;
+            line-height: 1.7;
+            word-break: break-word;
+            -webkit-hyphens: none; -moz-hyphens:none; hyphens:none;
+            user-select: text;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+          ">
+            <header style="
+              text-align:center;
+              margin-bottom: 1px;
+              page-break-after: avoid;
+              font-weight: 700;
+              font-size: 28px;
+              color: #f7f9fd;
+              user-select:none;
+            ">
+              ${subtitleText}
+            </header>
+           
+        `;
+
+        const groups = {};
+        generatedQuestions.forEach(q => {
+          const t = q.type;
+          if (!groups[t]) groups[t] = [];
+          groups[t].push(q);
+        });
+
+        ['choose', '√ or X', 'Complete', 'Answer', 'Look and answer'].forEach(type => {
+          if (!groups[type] || groups[type].length === 0) return;
+          html += `<section style="margin-bottom: 1px; page-break-inside: avoid;">
+            <h2 style="
+              font-weight: 800;
+              color: #1d428a;
+              font-size: 22px;
+              user-select:none;
+              border-bottom: 3px solid #d71920;
+              padding-bottom: 1px;
+              margin-top: 0;
+              margin-bottom: 1px;
+              ">
+              ${type}
+            </h2>
+          `;
+
+          groups[type].forEach((q, i) => {
+            const difficultyClass = `difficulty-${q.difficulty.toLowerCase()}`;
+            html += `<article style="margin-top: 1px; page-break-inside: avoid; break-inside: avoid;">
+              <p style="
+                margin-bottom: 1px;
+                font-weight: 700;
+                font-size: 17px;
+                user-select:text;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;">
+                ${i +1}. ${q.question}
+              </p>
+              <div style="
+                display: flex;
+                gap: 1px;
+                margin-bottom: 1px;
+                align-items: center;
+              ">
+                
+              </div>`;
+            
+            // Add image if available - FIXED: Added page-break-inside: avoid and max-height in mm
+            if (q.image) {
+              html += `<div style="margin: 10px 0; text-align: center; page-break-inside: avoid; break-inside: avoid;">
+                <img src="${q.image}" style="max-width: 100%; max-height: 150mm; height: auto; display: block; margin: 0 auto;">
+              </div>`;
+            }
+            
+            if (q.type === "choose" && q.options) {
+              html += '<ul style="padding-left: 1.5rem; margin: 0; list-style-type: upper-alpha; color: #3c3c4399; user-select:text; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">';
+              q.options.forEach(opt => {
+                html += `<li style="margin-bottom:8px;">${opt}</li>`;
+              });
+              html += '</ul>';
+            }
+            html += `</article>`;
+          });
+
+          html += `</section>`;
+        });
+        html += `</div>`;
+
+        html2pdf().set({
+          margin: [15, 15, 15, 15],
+          filename: `Grade4_Science_Exam_${new Date().toISOString().split('T')[0]}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { 
+            scale: 2, 
+            dpi: 192, 
+            letterRendering: true, 
+            scrollX: 0, 
+            scrollY: 0,
+            useCORS: true // Allow loading external images
+          },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        }).from(html).save().then(() => {
+          showNotification('PDF exported successfully!');
+          
+          // Record activity
+          recordUserActivity('export_pdf');
+        }).catch(() => {
+          showNotification('Failed to export PDF.');
+        });
+      }
+      
+      // Clear selections
+      function clearSelections() {
+        // Clear all checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+          checkbox.checked = false;
+        });
+        
+        // Clear selections
+        selectedUnits.clear();
+        selectedConcepts.clear();
+        selectedLessons.clear();
+        
+        // Reset inputs
+        chooseCountInput.value = "2";
+        tfCountInput.value = "2";
+        fbCountInput.value = "2";
+        saCountInput.value = "2";
+        imageCountInput.value = "0";
+        subtitleInput.value = "";
+        
+        // Re-render UI
+        renderSelectionUI();
+        previewPanel.innerHTML = '<em>No questions generated yet. Click "Generate Exam" to start.</em>';
+        generatedQuestions = [];
+        showNotification('All selections cleared.');
+        
+        // Record activity
+        recordUserActivity('clear_selections');
+      }
+
+    // NEW: Check for updates
+      async function checkForUpdates() {
+        // Show updating state
+        const btnText = checkUpdateBtn.textContent;
+        checkUpdateBtn.innerHTML = '<span class="spinner"></span> Checking...';
+        checkUpdateBtn.classList.add('updating');
+        
+        try {
+          // Reload data from Supabase
+          await loadQuestionBank();
+          showNotification('Question bank updated successfully!', 3000, false, true);
+          
+          // Record activity
+          recordUserActivity('check_updates');
+        } catch (error) {
+          console.error('Update check failed', error);
+          showNotification('Update check failed. Please try again later.', 5000, true);
+        } finally {
+          // Restore button state
+          checkUpdateBtn.textContent = btnText;
+          checkUpdateBtn.classList.remove('updating');
+        }
+      }
+
+      // Initialize app after login
+      function initApp() {
+        // Load question bank from Supabase
+        loadQuestionBank();
+        
+        // Set up event listeners
+        generateBtn.addEventListener('click', generateExam);
+        generateAllBtn.addEventListener('click', generateAllQuestions);
+        exportDocxBtn.addEventListener('click', exportDocx);
+        exportPdfBtn.addEventListener('click', exportPdf);
+        manualChooseBtn.addEventListener('click', manualChooseQuestions);
+        checkUpdateBtn.addEventListener('click', checkForUpdates);
+        logoutBtn.addEventListener('click', logout);
+        
+        scrollTopBtn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        clearSelectionBtn.addEventListener('click', clearSelections);
+      }
+
+      // Initialize login
+      function initLogin() {
+        // Generate device ID
+        deviceId = generateDeviceId();
+        
+        // Set up login form
+        loginForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          
+          const username = document.getElementById('username').value.trim();
+          const licenseKey = document.getElementById('licenseKey').value.trim();
+          
+          if (username && licenseKey) {
+            login(username, licenseKey);
+          } else {
+            loginStatus.textContent = "Please enter both username and license key";
+            loginStatus.className = "login-status error";
+            loginStatus.style.display = "block";
+          }
+        });
+        
+        // Check for existing session
+        checkExistingSession();
+      }
+
+      window.addEventListener('DOMContentLoaded', initLogin);
+    })();
+  </script>
+</body>
+</html>
